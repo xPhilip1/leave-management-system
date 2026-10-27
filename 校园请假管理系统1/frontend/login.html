@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>校园请假系统 · 登录</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", sans-serif;
+    }
+
+    body {
+      background: linear-gradient(145deg, #c9d9f0 0%, #a6bbd8 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.25) 0%, rgba(180, 200, 225, 0.1) 70%);
+      pointer-events: none;
+    }
+
+    .login-box {
+      width: 440px;
+      max-width: 100%;
+      background: #ffffff;
+      padding: 48px 36px 40px;
+      border-radius: 28px;
+      box-shadow: 0 25px 45px rgba(70, 90, 120, 0.35),
+        0 8px 20px rgba(100, 120, 150, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      position: relative;
+      z-index: 10;
+    }
+
+    .title-3d-wrapper {
+      position: absolute;
+      top: -38px;
+      left: 50%;
+      transform: translateX(-50%) skewX(-6deg) rotate(-1deg);
+      width: 88%;
+      z-index: -1;
+      filter: drop-shadow(0 14px 12px rgba(40, 60, 90, 0.4));
+      pointer-events: none;
+    }
+
+    .title-3d {
+      background: linear-gradient(135deg, #7b93ae 0%, #4a627a 100%);
+      color: #f0f4fa;
+      text-align: center;
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: 4px;
+      padding: 18px 10px 16px;
+      clip-path: polygon(4% 0%, 96% 0%, 100% 85%, 0% 100%);
+      text-shadow: 2px 4px 6px rgba(0, 0, 0, 0.25);
+      box-shadow:
+        0px 8px 0 #3a4e66,
+        0px 14px 18px rgba(30, 45, 70, 0.5),
+        inset 0 2px 10px rgba(255, 255, 255, 0.5);
+      transform: rotate(0.5deg) skewX(2deg);
+      line-height: 1.3;
+      border-radius: 4px 4px 8px 8px;
+    }
+
+    .title-3d span {
+      display: inline-block;
+      transform: skewX(2deg);
+      letter-spacing: 5px;
+    }
+
+    .item {
+      margin-bottom: 24px;
+    }
+
+    .item label {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #2c3e4e;
+      display: block;
+      margin-bottom: 8px;
+      letter-spacing: 0.3px;
+    }
+
+    /* 密码输入框容器 */
+    .password-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .password-wrapper input {
+      width: 100%;
+      padding: 14px 50px 14px 18px;
+      border: 1px solid #cddbe9;
+      border-radius: 14px;
+      outline: none;
+      font-size: 1rem;
+      background: #f4f8fe;
+      color: #1e2b38;
+      transition: 0.25s ease;
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.02);
+    }
+
+    .password-wrapper input:focus {
+      border-color: #6d8eb0;
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(90, 120, 160, 0.2),
+        0 4px 12px rgba(70, 90, 120, 0.1);
+    }
+
+    .password-wrapper input::placeholder {
+      color: #8fa4bc;
+      font-weight: 400;
+      font-size: 0.95rem;
+    }
+
+    /* 显示/隐藏密码按钮 - 完全静态 */
+    .toggle-password {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      z-index: 2;
+      outline: none;
+      width: 40px;
+      height: 40px;
+      transition: none;
+    }
+
+    .toggle-password:hover {
+      background: none;
+      transform: translateY(-50%);
+    }
+
+    .toggle-password:active {
+      background: none;
+      transform: translateY(-50%);
+    }
+
+    .toggle-password svg {
+      width: 22px;
+      height: 22px;
+      transition: none;
+    }
+
+    /* 普通输入框样式 */
+    .normal-input {
+      width: 100%;
+      padding: 14px 18px;
+      border: 1px solid #cddbe9;
+      border-radius: 14px;
+      outline: none;
+      font-size: 1rem;
+      background: #f4f8fe;
+      color: #1e2b38;
+      transition: 0.25s ease;
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.02);
+    }
+
+    .normal-input:focus {
+      border-color: #6d8eb0;
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(90, 120, 160, 0.2),
+        0 4px 12px rgba(70, 90, 120, 0.1);
+    }
+
+    .normal-input::placeholder {
+      color: #8fa4bc;
+      font-weight: 400;
+      font-size: 0.95rem;
+    }
+
+    /* 角色选择样式 */
+    .role-select {
+      width: 100%;
+      padding: 14px 18px;
+      border: 1px solid #cddbe9;
+      border-radius: 14px;
+      outline: none;
+      font-size: 1rem;
+      background: #f4f8fe;
+      color: #1e2b38;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7d8f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      background-size: 20px;
+      transition: 0.25s ease;
+    }
+
+    .role-select:focus {
+      border-color: #6d8eb0;
+      background-color: #ffffff;
+      box-shadow: 0 0 0 4px rgba(90, 120, 160, 0.2),
+        0 4px 12px rgba(70, 90, 120, 0.1);
+    }
+
+    .check {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin: 28px 0 32px;
+    }
+
+    .check-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .check input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #4f6f8a;
+      margin-right: 4px;
+      cursor: pointer;
+    }
+
+    .check label {
+      font-size: 0.95rem;
+      color: #3a4b5c;
+      cursor: pointer;
+      user-select: none;
+      font-weight: 500;
+    }
+
+    .register-link {
+      color: #4f6f8a;
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .register-link:hover {
+      color: #3d5268;
+      text-decoration: underline;
+    }
+
+    /* 登录按钮样式 */
+    .login-btn {
+      width: 100%;
+      padding: 15px 20px;
+      background: linear-gradient(180deg, #607d9b 0%, #3d5268 100%);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      transition: all 0.25s ease;
+      box-shadow: 0 8px 16px rgba(55, 75, 100, 0.35),
+        0 2px 4px rgba(0, 0, 0, 0.1);
+      text-transform: uppercase;
+      border-bottom: 3px solid #2f4052;
+    }
+
+    .login-btn:hover {
+      background: linear-gradient(180deg, #6b8aaa 0%, #4a627a 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 14px 22px rgba(50, 70, 95, 0.45),
+        0 4px 8px rgba(0, 0, 0, 0.15);
+      border-bottom-color: #253544;
+    }
+
+    .login-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 4px 10px rgba(40, 55, 75, 0.4);
+      border-bottom-width: 2px;
+    }
+
+    /* 注册弹窗样式 */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(30, 40, 60, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-box {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 36px 32px 32px;
+      width: 420px;
+      max-width: 90%;
+      box-shadow: 0 20px 40px rgba(50, 70, 100, 0.4);
+      position: relative;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #2c3e4e;
+      text-align: center;
+      margin-bottom: 28px;
+      letter-spacing: 2px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: #8fa4bc;
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: none;
+    }
+
+    .modal-close:hover {
+      color: #4a5568;
+      background: none;
+    }
+
+    .register-btn {
+      width: 100%;
+      padding: 14px 20px;
+      background: linear-gradient(180deg, #7b93ae 0%, #4a627a 100%);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      transition: all 0.25s ease;
+      box-shadow: 0 6px 14px rgba(55, 75, 100, 0.3);
+      border-bottom: 3px solid #3a4e66;
+      margin-top: 8px;
+    }
+
+    .register-btn:hover {
+      background: linear-gradient(180deg, #8ba3bc 0%, #5c7490 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(50, 70, 95, 0.4);
+    }
+
+    .register-btn:active {
+      transform: translateY(1px);
+    }
+
+    .login-box::after {
+      content: "";
+      position: absolute;
+      top: 20px;
+      right: 25px;
+      width: 60px;
+      height: 60px;
+      background: radial-gradient(circle, rgba(160, 180, 210, 0.25) 0%, transparent 70%);
+      border-radius: 50%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    @media (max-width: 450px) {
+      .login-box {
+        padding: 38px 24px 32px;
+      }
+
+      .title-3d {
+        font-size: 1.8rem;
+        padding: 14px 5px 12px;
+        letter-spacing: 2px;
+      }
+
+      .title-3d-wrapper {
+        top: -30px;
+        width: 92%;
+      }
+
+      .toggle-password {
+        width: 36px;
+        height: 36px;
+        right: 4px;
+      }
+
+      .toggle-password svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      .modal-box {
+        padding: 28px 20px 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <!-- 斜视3D立体标题 -->
+    <div class="title-3d-wrapper">
+      <div class="title-3d">
+        <span>校园请假管理系统</span>
+      </div>
+    </div>
+
+    <!-- 账号输入框 -->
+    <div class="item" style="margin-top: 18px;">
+      <label>账号</label>
+      <input id="acc" type="text" class="normal-input" placeholder="输入账号" value="stu001" autocomplete="off">
+    </div>
+
+    <!-- 密码输入框 - 带显示/隐藏按钮 -->
+    <div class="item">
+      <label>密码</label>
+      <div class="password-wrapper">
+        <input id="pwd" type="password" placeholder="输入密码" value="123456" autocomplete="off">
+        <button type="button" class="toggle-password" onclick="togglePasswordVisibility()" title="显示/隐藏密码" id="toggleBtn">
+          <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#4a5568" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="check">
+      <div class="check-left">
+        <input type="checkbox" id="save">
+        <label for="save">记住密码</label>
+      </div>
+      <span class="register-link" onclick="openRegisterModal()">注册新账号</span>
+    </div>
+    <button class="login-btn" onclick="login()">登 录</button>
+    <p style="text-align:center; margin-top:20px; font-size:0.8rem; color:#6b7d8f;">
+      学生 / 教师 / 管理员
+    </p>
+  </div>
+
+  <!-- 注册弹窗 -->
+  <!-- 注册弹窗 -->
+  <div class="modal-overlay" id="registerModal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeRegisterModal()">×</button>
+      <div class="modal-title">注册新账号</div>
+
+      <div class="item">
+        <label>账号 <span style="color:#c45555;">*</span></label>
+        <input id="regAcc" type="text" class="normal-input" placeholder="请输入账号（至少3位）" autocomplete="off">
+      </div>
+
+      <div class="item">
+        <label>姓名 <span style="color:#c45555;">*</span></label>
+        <input id="regName" type="text" class="normal-input" placeholder="请输入真实姓名" autocomplete="off">
+      </div>
+
+      <div class="item">
+        <label>密码 <span style="color:#c45555;">*</span></label>
+        <div class="password-wrapper">
+          <input id="regPwd" type="password" placeholder="请输入密码（至少4位）" autocomplete="off">
+          <button type="button" class="toggle-password" onclick="toggleRegPasswordVisibility()" title="显示/隐藏密码">
+            <svg id="reg-eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#4a5568" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="item">
+        <label>确认密码 <span style="color:#c45555;">*</span></label>
+        <div class="password-wrapper">
+          <input id="regPwdConfirm" type="password" placeholder="请再次输入密码" autocomplete="off">
+          <button type="button" class="toggle-password" onclick="toggleRegConfirmPasswordVisibility()" title="显示/隐藏密码">
+            <svg id="reg-confirm-eye-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#4a5568" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="item">
+        <label>手机号 <span style="color:#c45555;">*</span></label>
+        <input id="regPhone" type="text" class="normal-input" placeholder="请输入手机号（11位）" autocomplete="off">
+      </div>
+
+      <div class="item">
+        <label>选择角色 <span style="color:#c45555;">*</span></label>
+        <select id="regRole" class="role-select">
+          <option value="stu">学生</option>
+          <option value="tea">教师</option>
+        </select>
+      </div>
+
+      <div class="item" id="classSelectGroup">
+        <label>所属班级</label>
+        <select id="regClass" class="role-select">
+          <option value="">请选择班级</option>
+        </select>
+      </div>
+
+      <button class="register-btn" onclick="register()">注 册</button>
+    </div>
+  </div>
+
+  <script>
+    // 用户数据 - 从localStorage加载或使用默认数据
+    let userArr = [];
+    
+    function loadUsers() {
+      const storedUsers = localStorage.getItem('campusUsers');
+      if (storedUsers) {
+        userArr = JSON.parse(storedUsers);
+      } else {
+        // 默认用户数据
+        userArr = [
+          { acc: 'stu001', pwd: '123456', role: 'stu' },
+          { acc: 'tea001', pwd: '123456', role: 'tea' },
+          { acc: 'admin', pwd: '123456', role: 'admin' }
+        ];
+        saveUsers();
+      }
+    }
+    
+    function saveUsers() {
+      localStorage.setItem('campusUsers', JSON.stringify(userArr));
+    }
+    
+    // 页面加载时初始化用户数据
+    loadUsers();
+
+    // 登录框密码显示/隐藏切换
+    function togglePasswordVisibility() {
+      const pwdInput = document.getElementById('pwd');
+      const eyeIcon = document.getElementById('eye-icon');
+      
+      if (pwdInput.type === 'password') {
+        pwdInput.type = 'text';
+        eyeIcon.setAttribute('stroke', '#cbd5e0');
+      } else {
+        pwdInput.type = 'password';
+        eyeIcon.setAttribute('stroke', '#4a5568');
+      }
+    }
+
+    // 注册框密码显示/隐藏切换
+    function toggleRegPasswordVisibility() {
+      const regPwdInput = document.getElementById('regPwd');
+      const regEyeIcon = document.getElementById('reg-eye-icon');
+      
+      if (regPwdInput.type === 'password') {
+        regPwdInput.type = 'text';
+        regEyeIcon.setAttribute('stroke', '#cbd5e0');
+      } else {
+        regPwdInput.type = 'password';
+        regEyeIcon.setAttribute('stroke', '#4a5568');
+      }
+    }
+
+    // 注册框确认密码显示/隐藏切换
+    function toggleRegConfirmPasswordVisibility() {
+      const regPwdConfirmInput = document.getElementById('regPwdConfirm');
+      const regConfirmEyeIcon = document.getElementById('reg-confirm-eye-icon');
+      
+      if (regPwdConfirmInput.type === 'password') {
+        regPwdConfirmInput.type = 'text';
+        regConfirmEyeIcon.setAttribute('stroke', '#cbd5e0');
+      } else {
+        regPwdConfirmInput.type = 'password';
+        regConfirmEyeIcon.setAttribute('stroke', '#4a5568');
+      }
+    }
+
+    // 打开注册弹窗
+    function openRegisterModal() {
+      document.getElementById('registerModal').classList.add('active');
+      // 清空注册表单
+      document.getElementById('regAcc').value = '';
+      document.getElementById('regPwd').value = '';
+      document.getElementById('regPwdConfirm').value = '';
+      document.getElementById('regRole').value = 'stu';
+      // 重置眼睛图标颜色
+      document.getElementById('reg-eye-icon').setAttribute('stroke', '#4a5568');
+      document.getElementById('reg-confirm-eye-icon').setAttribute('stroke', '#4a5568');
+      document.getElementById('regPwd').type = 'password';
+      document.getElementById('regPwdConfirm').type = 'password';
+    }
+
+    // 关闭注册弹窗
+    function closeRegisterModal() {
+      document.getElementById('registerModal').classList.remove('active');
+    }
+
+    // 点击弹窗外部关闭
+    document.addEventListener('click', function(e) {
+      const modal = document.getElementById('registerModal');
+      if (e.target === modal) {
+        closeRegisterModal();
+      }
+    });
+
+    // ESC键关闭弹窗
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeRegisterModal();
+      }
+    });
+
+    // 注册功能
+    // 加载班级列表
+    async function loadClassOptions() {
+      try {
+        const res = await fetch('http://localhost:5000/api/classes', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await res.json();
+        if (data.code === 200) {
+          const select = document.getElementById('regClass');
+          select.innerHTML = '<option value="">请选择班级</option>';
+          data.data.forEach(cls => {
+            select.innerHTML += `<option value="${cls.class_id}">${cls.class_name}</option>`;
+          });
+        }
+      } catch (e) {
+        console.error('加载班级失败:', e);
+      }
+    }
+
+    // 角色切换时显示/隐藏班级选择
+    document.getElementById('regRole').addEventListener('change', function() {
+      const classGroup = document.getElementById('classSelectGroup');
+      if (this.value === 'stu') {
+        classGroup.style.display = 'block';
+      } else {
+        classGroup.style.display = 'none';
+      }
+    });
+
+    // 打开注册弹窗时加载班级
+    function openRegisterModal() {
+      document.getElementById('registerModal').classList.add('active');
+      document.getElementById('regAcc').value = '';
+      document.getElementById('regName').value = '';
+      document.getElementById('regPwd').value = '';
+      document.getElementById('regPwdConfirm').value = '';
+      document.getElementById('regPhone').value = '';
+      document.getElementById('regRole').value = 'stu';
+      document.getElementById('regClass').value = '';
+      document.getElementById('classSelectGroup').style.display = 'block';
+      document.getElementById('reg-eye-icon').setAttribute('stroke', '#4a5568');
+      document.getElementById('reg-confirm-eye-icon').setAttribute('stroke', '#4a5568');
+      document.getElementById('regPwd').type = 'password';
+      document.getElementById('regPwdConfirm').type = 'password';
+      loadClassOptions();
+    }
+
+    // 注册函数
+    async function register() {
+      const regAcc = document.getElementById('regAcc').value.trim();
+      const regName = document.getElementById('regName').value.trim();
+      const regPwd = document.getElementById('regPwd').value.trim();
+      const regPwdConfirm = document.getElementById('regPwdConfirm').value.trim();
+      const regPhone = document.getElementById('regPhone').value.trim();
+      const regRole = document.getElementById('regRole').value;
+      const regClass = document.getElementById('regClass').value;
+
+      if (!regAcc || regAcc.length < 3) { alert('账号至少3个字符'); return; }
+      if (!regName) { alert('请输入姓名'); return; }
+      if (!regPwd || regPwd.length < 4) { alert('密码至少4位'); return; }
+      if (regPwd !== regPwdConfirm) { alert('两次密码不一致'); return; }
+      if (!regPhone || !/^1\d{10}$/.test(regPhone)) { alert('请输入正确的11位手机号'); return; }
+      if (regRole === 'stu' && !regClass) { alert('学生请选择所属班级'); return; }
+
+      try {
+        const body = {
+          username: regAcc,
+          password: regPwd,
+          name: regName,
+          phone: regPhone,
+          role: regRole
+        };
+        if (regRole === 'stu' && regClass) {
+          body.class_id = regClass;
+        }
+
+        const response = await fetch('http://localhost:5000/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+
+        const data = await response.json();
+
+        if (data.code === 200) {
+          alert('注册成功！请登录');
+          closeRegisterModal();
+          document.getElementById('acc').value = regAcc;
+          document.getElementById('pwd').value = regPwd;
+        } else {
+          alert(data.msg);
+        }
+      } catch (error) {
+        alert('连接服务器失败');
+        console.error(error);
+      }
+    }
+
+    // 登录功能
+    // 登录函数 - 调用后端API
+    async function login() {
+      let acc = document.getElementById('acc').value.trim();
+      let pwd = document.getElementById('pwd').value.trim();
+
+      if (!acc || !pwd) {
+          alert('请输入账号和密码');
+          return;
+      }
+
+      try {
+          const response = await fetch('http://localhost:5000/api/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include',
+              body: JSON.stringify({ username: acc, password: pwd })
+          });
+
+          const data = await response.json();
+
+          if (data.code === 200) {
+              // 保存用户信息
+              localStorage.setItem('role', data.data.role);
+              localStorage.setItem('userInfo', JSON.stringify(data.data));
+
+              // 记住密码
+              if (document.getElementById('save').checked) {
+                  localStorage.setItem('rememberedAcc', acc);
+                  localStorage.setItem('rememberedPwd', pwd);
+              }
+
+              // 跳转
+              if (data.data.role === 'stu') location.href = 'student.html';
+              else if (data.data.role === 'tea') location.href = 'teacher.html';
+              else location.href = 'admin.html';
+          } else {
+              alert(data.msg);
+          }
+      } catch (error) {
+          alert('连接服务器失败，请确保后端已启动');
+          console.error(error);
+      }
+    }
+
+    // 回车登录
+    document.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        const modal = document.getElementById('registerModal');
+        if (modal.classList.contains('active')) {
+          // 如果注册弹窗打开，触发注册
+          register();
+        } else {
+          // 否则触发登录
+          login();
+        }
+      }
+    });
+
+    // 记住密码功能
+    const saveCheck = document.getElementById('save');
+    const accInput = document.getElementById('acc');
+    const pwdInput = document.getElementById('pwd');
+
+    window.addEventListener('DOMContentLoaded', function () {
+      if (localStorage.getItem('rememberedAcc')) {
+        accInput.value = localStorage.getItem('rememberedAcc');
+        pwdInput.value = localStorage.getItem('rememberedPwd') || '';
+        saveCheck.checked = true;
+      }
+    });
+
+    const originalLogin = login;
+    window.login = function () {
+      if (saveCheck.checked) {
+        localStorage.setItem('rememberedAcc', accInput.value);
+        localStorage.setItem('rememberedPwd', pwdInput.value);
+      } else {
+        localStorage.removeItem('rememberedAcc');
+        localStorage.removeItem('rememberedPwd');
+      }
+      originalLogin();
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>校园请假系统 · 学生中心</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", sans-serif;
+}
+
+body {
+  background: #e8eef5;
+}
+
+.wrap {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ========== 左侧导航栏 ========== */
+.left {
+  width: 240px;
+  background: linear-gradient(180deg, #3d5268 0%, #2c3e50 100%);
+  color: #ecf0f1;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 12px rgba(30, 40, 60, 0.2);
+  position: relative;
+  z-index: 10;
+}
+
+.l-title {
+  padding: 28px 20px 22px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.15);
+  color: #dfe7f0;
+}
+
+.nav-menu {
+  flex: 1;
+  padding: 12px 0;
+  overflow-y: auto;
+}
+
+.menu {
+  padding: 14px 24px;
+  margin: 4px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #c5d0dc;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: 0.5px;
+}
+
+.menu:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.menu.active {
+  background: linear-gradient(135deg, #6d8eb0, #4f6f8a);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(70, 100, 140, 0.4);
+}
+
+.exit-menu {
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 16px 24px;
+  background: rgba(180, 60, 60, 0.15);
+  color: #f5a0a0;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: 0.5px;
+  border-radius: 0;
+  margin: 0;
+}
+
+.exit-menu:hover {
+  background: rgba(200, 60, 60, 0.3);
+  color: #ffb8b8;
+}
+
+/* ========== 右侧内容区 ========== */
+.right {
+  flex: 1;
+  padding: 28px;
+  background: #e8eef5;
+  overflow-y: auto;
+}
+
+.box {
+  background: #ffffff;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(60, 80, 110, 0.08);
+  border: 1px solid #e3e9f2;
+}
+
+.box h3 {
+  color: #3d5268;
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid #e8eef5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ========== 表单样式 ========== */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 8px;
+  letter-spacing: 0.3px;
+}
+
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #dce3ef;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  background: #f8fafd;
+  color: #2c3e4e;
+  outline: none;
+  transition: all 0.25s ease;
+  font-family: inherit;
+}
+
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: #6d8eb0;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(90, 120, 160, 0.12);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-group select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7d8f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 18px;
+}
+
+/* ========== 滚轮时间选择器 ========== */
+.time-picker-container {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.time-picker-group {
+  flex: 1;
+  text-align: center;
+  min-width: 0;
+}
+
+.time-picker-label {
+  font-size: 0.8rem;
+  color: #6b7d8f;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.wheel-wrapper {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #f4f8fe;
+  border: 1px solid #dce3ef;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.wheel-wrapper:active {
+  cursor: grabbing;
+}
+
+.wheel-wrapper::before,
+.wheel-wrapper::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 70px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.wheel-wrapper::before {
+  top: 0;
+  background: linear-gradient(to bottom, #f4f8fe 0%, rgba(244, 248, 254, 0) 100%);
+}
+
+.wheel-wrapper::after {
+  bottom: 0;
+  background: linear-gradient(to top, #f4f8fe 0%, rgba(244, 248, 254, 0) 100%);
+}
+
+.wheel-highlight {
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  right: 8px;
+  height: 44px;
+  transform: translateY(-50%);
+  border-top: 2px solid #6d8eb0;
+  border-bottom: 2px solid #6d8eb0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: 2px;
+}
+
+.wheel-list {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.wheel-item {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  color: #a0b4c8;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wheel-item.selected {
+  color: #2c3e4e;
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+/* 时间摘要 */
+.time-summary {
+  margin-top: 16px;
+  padding: 14px 18px;
+  background: #f0f4fa;
+  border-radius: 10px;
+  display: flex;
+  gap: 30px;
+  font-size: 0.9rem;
+  color: #4a5568;
+  flex-wrap: wrap;
+}
+
+.time-summary span {
+  font-weight: 600;
+  color: #3d5268;
+}
+
+.time-summary .arrow-icon {
+  margin: 0 8px;
+  color: #8fa4bc;
+}
+
+/* ========== 表格样式 ========== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+td, th {
+  border: 1px solid #e8eef5;
+  padding: 12px 10px;
+  text-align: center;
+}
+
+th {
+  background: #f0f4fa;
+  color: #3d5268;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+tr:hover {
+  background: #fafbfd;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.status-pending {
+  background: #fff8e6;
+  color: #b8860b;
+  border: 1px solid #f0d880;
+}
+
+.status-approved {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+
+.status-rejected {
+  background: #fde8e8;
+  color: #c62828;
+  border: 1px solid #f0b0b0;
+}
+
+/* ========== 按钮样式 ========== */
+button {
+  padding: 8px 18px;
+  margin: 2px;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  border: none;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.btn-primary {
+  background: #5b7f9e;
+  color: #fff;
+  padding: 12px 28px;
+  font-size: 0.95rem;
+  box-shadow: 0 3px 8px rgba(70, 100, 140, 0.25);
+}
+
+.btn-primary:hover {
+  background: #4f6f8a;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 14px rgba(70, 100, 140, 0.35);
+}
+
+.btn-danger {
+  background: #c97a7a;
+  color: #fff;
+}
+
+.btn-danger:hover {
+  background: #b55a5a;
+}
+
+.btn-sm {
+  padding: 6px 14px;
+  font-size: 0.8rem;
+}
+
+.btn-outline {
+  background: transparent;
+  color: #5b7f9e;
+  border: 1px solid #b0c4d8;
+}
+
+.btn-outline:hover {
+  background: #f0f4fa;
+  border-color: #6d8eb0;
+}
+
+/* ========== 个人信息卡片 ========== */
+.profile-card {
+  background: #f8fafd;
+  border-radius: 14px;
+  padding: 24px;
+  border: 1px solid #e3e9f2;
+  margin-bottom: 20px;
+}
+
+.profile-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #e8eef5;
+}
+
+.profile-item:last-child {
+  border-bottom: none;
+}
+
+.profile-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #4a5568;
+  width: 100px;
+}
+
+.profile-value {
+  flex: 1;
+  font-size: 0.95rem;
+  color: #2c3e4e;
+  padding: 0 16px;
+}
+
+.profile-value.masked {
+  letter-spacing: 3px;
+}
+
+.profile-action {
+  min-width: 80px;
+  text-align: right;
+}
+
+/* ========== 修改弹窗 ========== */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(30, 40, 60, 0.45);
+  backdrop-filter: blur(3px);
+  z-index: 200;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal-box {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 32px 28px 28px;
+  width: 440px;
+  max-width: 90%;
+  box-shadow: 0 20px 40px rgba(50, 70, 100, 0.35);
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #3d5268;
+  text-align: center;
+  margin-bottom: 24px;
+  letter-spacing: 1px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid #e8eef5;
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  color: #8fa4bc;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.modal-close:hover {
+  color: #4a5568;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #dce3ef;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  background: #f8fafd;
+  color: #2c3e4e;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.form-group input:focus {
+  border-color: #6d8eb0;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(90, 120, 160, 0.12);
+}
+
+.form-group input:disabled {
+  background: #f0f4fa;
+  color: #8fa4bc;
+  cursor: not-allowed;
+}
+
+.modal-submit {
+  width: 100%;
+  padding: 12px;
+  background: #5b7f9e;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  letter-spacing: 1px;
+  transition: 0.2s;
+}
+
+.modal-submit:hover {
+  background: #4f6f8a;
+}
+
+.hint-text {
+  font-size: 0.8rem;
+  color: #8fa4bc;
+  margin-top: 4px;
+}
+
+.error-text {
+  font-size: 0.8rem;
+  color: #c45555;
+  margin-top: 4px;
+  display: none;
+}
+
+/* ========== 退出弹窗 ========== */
+.logout-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(20, 10, 10, 0.4);
+  backdrop-filter: blur(3px);
+  z-index: 300;
+  justify-content: center;
+  align-items: center;
+}
+
+.logout-overlay.active {
+  display: flex;
+}
+
+.logout-dialog {
+  background: #fff5f5;
+  border-radius: 20px;
+  padding: 36px 32px 28px;
+  width: 380px;
+  max-width: 90%;
+  box-shadow: 0 20px 50px rgba(80, 20, 20, 0.25);
+  text-align: center;
+  border: 1px solid #f0d0d0;
+}
+
+.logout-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 18px;
+  background: #fce8e8;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: #c45555;
+}
+
+.logout-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #5c3030;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.logout-message {
+  color: #8b5e5e;
+  font-size: 0.9rem;
+  margin-bottom: 28px;
+  line-height: 1.5;
+}
+
+.logout-buttons {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+}
+
+.logout-btn-cancel {
+  padding: 10px 28px;
+  background: #f0e0e0;
+  color: #6b4040;
+  border: 1px solid #e0c8c8;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.logout-btn-cancel:hover {
+  background: #e8d4d4;
+  color: #4a2828;
+}
+
+.logout-btn-confirm {
+  padding: 10px 28px;
+  background: linear-gradient(180deg, #c45555, #a83e3e);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(160, 50, 50, 0.3);
+}
+
+.logout-btn-confirm:hover {
+  background: linear-gradient(180deg, #d46565, #b84848);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(160, 50, 50, 0.4);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #a0b0c0;
+}
+
+.empty-state .empty-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .left { width: 200px; }
+  .right { padding: 16px; }
+  .box { padding: 20px; }
+  .time-picker-container { gap: 6px; }
+  .wheel-wrapper { height: 160px; }
+  .wheel-item { height: 38px; font-size: 0.9rem; }
+  .wheel-item.selected { font-size: 1rem; }
+  .profile-item { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .profile-action { text-align: left; }
+  table { font-size: 0.8rem; }
+  td, th { padding: 8px 6px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="left">
+    <div class="l-title">🎓 学生中心</div>
+    <div class="nav-menu">
+      <div class="menu active" onclick="change(1)">
+        <span>📝</span> 提交请假申请
+      </div>
+      <div class="menu" onclick="change(2)">
+        <span>📋</span> 我的请假列表
+      </div>
+      <div class="menu" onclick="change(3)">
+        <span>👤</span> 个人资料
+      </div>
+    </div>
+    <div class="exit-menu" onclick="showLogoutDialog()">
+      <span>🚪</span> 退出登录
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="box" id="page1">
+      <h3>📝 提交请假申请</h3>
+      <div class="form-group">
+        <label>📅 开始时间</label>
+        <div class="time-picker-container">
+          <div class="time-picker-group"><div class="time-picker-label">年</div><div class="wheel-wrapper" id="startYearWheel"><div class="wheel-highlight"></div><div class="wheel-list" id="startYearList"></div></div></div>
+          <div class="time-picker-group"><div class="time-picker-label">月</div><div class="wheel-wrapper" id="startMonthWheel"><div class="wheel-highlight"></div><div class="wheel-list" id="startMonthList"></div></div></div>
+          <div class="time-picker-group"><div class="time-picker-label">日</div><div class="wheel-wrapper" id="startDayWheel"><div class="wheel-highlight"></div><div class="wheel-list" id="startDayList"></div></div></div>
+          <div class="time-picker-group"><div class="time-picker-label">上/下午</div><div class="wheel-wrapper" id="startAmPmWheel"><div class="wheel-highlight"></div><div class="wheel-list" id="startAmPmList"></div></div></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>📅 结束时间</label>
+        <div class="time-picker-container">
+          <div class="time-picker-group"><div class="time-picker-label">年</div><div class="wheel-wrapper" id="endYearWheel"><div class="wheel-highlight"></div><div class="wheel-list" id="endYearList"></div></div></div>
+          <div class="time-picker-group"><div class="time-picker-label">月</div><div class="wheel-wrapper" id="endMonthWheel"><div class="wheel-highlight"></div><div class="wheel-list" id="endMonthList"></div></div></div>
+          <div class="time-picker-group"><div class="time-picker-label">日</div><div class="wheel-wrapper" id="endDayWheel"><div class="wheel-highlight"></div><div class="wheel-list" id="endDayList"></div></div></div>
+          <div class="time-picker-group"><div class="time-picker-label">上/下午</div><div class="wheel-wrapper" id="endAmPmWheel"><div class="wheel-highlight"></div><div class="wheel-list" id="endAmPmList"></div></div></div>
+        </div>
+      </div>
+      <div class="time-summary">
+        <div>开始：<span id="startSummary">-</span></div>
+        <div class="arrow-icon">→</div>
+        <div>结束：<span id="endSummary">-</span></div>
+      </div>
+      <div class="form-group">
+        <label>请假类型</label>
+        <select id="type">
+          <option value="病假">🤒 病假</option>
+          <option value="事假">📋 事假</option>
+          <option value="其他">📌 其他</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>请假原因</label>
+        <textarea id="reason" placeholder="请详细描述请假原因..."></textarea>
+      </div>
+      <button class="btn-primary" onclick="submitLeave()">📤 提交申请</button>
+    </div>
+
+    <div class="box" id="page2" style="display:none;">
+      <h3>📋 我的请假记录</h3>
+      <table>
+        <thead><tr><th>序号</th><th>请假时段</th><th>类型</th><th>原因</th><th>状态</th><th>操作</th></tr></thead>
+        <tbody id="list"></tbody>
+      </table>
+    </div>
+
+    <div class="box" id="page3" style="display:none;">
+      <h3>👤 个人资料</h3>
+      <div class="profile-card">
+        <div class="profile-item"><span class="profile-label">账号</span><span class="profile-value" id="profileAcc">-</span><span class="profile-action"></span></div>
+        <div class="profile-item"><span class="profile-label">角色</span><span class="profile-value">学生</span><span class="profile-action"></span></div>
+        <div class="profile-item"><span class="profile-label">姓名</span><span class="profile-value" id="profileName">-</span><span class="profile-action"><button class="btn-outline btn-sm" onclick="openEditModal('name')">✏️ 修改</button></span></div>
+        <div class="profile-item"><span class="profile-label">手机号</span><span class="profile-value" id="profilePhone">-</span><span class="profile-action"><button class="btn-outline btn-sm" onclick="openEditModal('phone')">✏️ 修改</button></span></div>
+        <div class="profile-item"><span class="profile-label">密码</span><span class="profile-value masked">••••••••</span><span class="profile-action"><button class="btn-outline btn-sm" onclick="openEditModal('password')">✏️ 修改</button></span></div>
+        <div class="profile-item"><span class="profile-label">班级</span><span class="profile-value" id="profileClass">-</span><span class="profile-action"></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="editModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeEditModal()">×</button>
+    <div class="modal-title" id="modalTitle">修改资料</div>
+    <div id="modalContent"></div>
+    <button class="modal-submit" onclick="submitEdit()">确认修改</button>
+  </div>
+</div>
+
+<div class="logout-overlay" id="logoutOverlay">
+  <div class="logout-dialog">
+    <div class="logout-icon">⚠️</div>
+    <div class="logout-title">确认退出</div>
+    <div class="logout-message">您确定要退出登录吗？<br>退出后需要重新登录才能访问系统。</div>
+    <div class="logout-buttons">
+      <button class="logout-btn-cancel" onclick="hideLogoutDialog()">取消</button>
+      <button class="logout-btn-confirm" onclick="confirmLogout()">确认退出</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========== 滚轮选择器类 ==========
+class WheelPicker {
+  constructor(wrapperId, listId, items, defaultIndex, onChange) {
+    this.wrapper = document.getElementById(wrapperId);
+    this.list = document.getElementById(listId);
+    this.items = items;
+    this.currentIndex = Math.max(0, Math.min(items.length - 1, defaultIndex));
+    this.onChange = onChange;
+    this.itemHeight = 44;
+    this.isDragging = false;
+    this.startY = 0;
+    this.startTranslate = 0;
+    this.currentTranslate = 0;
+    this.boundMove = null;
+    this.boundEnd = null;
+    this.init();
+  }
+  init() {
+    this.render();
+    requestAnimationFrame(() => { this.snapToIndex(this.currentIndex, false); });
+    this.bindEvents();
+  }
+  render() {
+    this.list.innerHTML = '';
+    this.items.forEach((item, i) => {
+      const div = document.createElement('div');
+      div.className = 'wheel-item' + (i === this.currentIndex ? ' selected' : '');
+      div.textContent = item;
+      div.setAttribute('data-index', i);
+      this.list.appendChild(div);
+    });
+  }
+  getWrapperHeight() { return this.wrapper.clientHeight || 200; }
+  getTranslateByIndex(index) {
+    const h = this.getWrapperHeight();
+    return (h - this.itemHeight) / 2 - index * this.itemHeight;
+  }
+  snapToIndex(index, animate = true) {
+    this.currentIndex = Math.max(0, Math.min(this.items.length - 1, index));
+    const ty = this.getTranslateByIndex(this.currentIndex);
+    this.currentTranslate = ty;
+    this.list.style.transition = animate ? 'transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)' : 'none';
+    this.list.style.transform = `translateY(${ty}px)`;
+    this.list.querySelectorAll('.wheel-item').forEach((item, i) => {
+      item.classList.toggle('selected', i === this.currentIndex);
+    });
+    if (this.onChange) this.onChange(this.items[this.currentIndex], this.currentIndex);
+  }
+  bindEvents() {
+    this.wrapper.addEventListener('mousedown', (e) => this.onDragStart(e));
+    this.wrapper.addEventListener('touchstart', (e) => this.onDragStart(e), { passive: false });
+    this.boundMove = (e) => this.onDragMove(e);
+    this.boundEnd = () => this.onDragEnd();
+    document.addEventListener('mousemove', this.boundMove);
+    document.addEventListener('mouseup', this.boundEnd);
+    document.addEventListener('touchmove', this.boundMove, { passive: false });
+    document.addEventListener('touchend', this.boundEnd);
+    this.wrapper.addEventListener('wheel', (e) => {
+      e.preventDefault(); e.stopPropagation();
+      this.snapToIndex(this.currentIndex + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: false });
+  }
+  getEventY(e) { return e.touches && e.touches.length > 0 ? e.touches[0].clientY : e.clientY; }
+  onDragStart(e) {
+    if (!this.wrapper.contains(e.target)) return;
+    this.isDragging = true;
+    this.startY = this.getEventY(e);
+    this.startTranslate = this.currentTranslate;
+    this.list.style.transition = 'none';
+    this.wrapper.style.cursor = 'grabbing';
+    if (e.cancelable) e.preventDefault();
+  }
+  onDragMove(e) {
+    if (!this.isDragging) return;
+    const diff = this.getEventY(e) - this.startY;
+    this.currentTranslate = this.startTranslate + diff;
+    const minT = this.getTranslateByIndex(this.items.length - 1);
+    const maxT = this.getTranslateByIndex(0);
+    if (this.currentTranslate > maxT) this.currentTranslate = maxT + (this.currentTranslate - maxT) * 0.3;
+    else if (this.currentTranslate < minT) this.currentTranslate = minT + (this.currentTranslate - minT) * 0.3;
+    this.list.style.transform = `translateY(${this.currentTranslate}px)`;
+    if (e.cancelable) e.preventDefault();
+  }
+  onDragEnd() {
+    if (!this.isDragging) return;
+    this.isDragging = false;
+    this.wrapper.style.cursor = 'grab';
+    const offset = (this.getWrapperHeight() - this.itemHeight) / 2;
+    this.snapToIndex(Math.round((offset - this.currentTranslate) / this.itemHeight));
+  }
+  setItems(items, defaultIndex = 0) {
+    this.items = items;
+    this.currentIndex = Math.min(defaultIndex, items.length - 1);
+    this.render();
+    requestAnimationFrame(() => { this.snapToIndex(this.currentIndex, false); });
+  }
+}
+
+// ========== 全局变量 ==========
+let cur = 1;
+let leaveList = [];
+
+function getYearOptions() {
+  const y = new Date().getFullYear();
+  return [y, y + 1, y + 2];
+}
+function getMonthOptions() {
+  return Array.from({length: 12}, (_, i) => (i + 1) + '月');
+}
+function getDaysInMonth(year, month) {
+  return new Date(year, month, 0).getDate();
+}
+function getDayOptions(year, month) {
+  return Array.from({length: getDaysInMonth(year, month)}, (_, i) => (i + 1) + '日');
+}
+
+const amPmItems = ['上午', '下午'];
+const now = new Date();
+const currentYear = now.getFullYear();
+const currentMonth = now.getMonth() + 1;
+const currentDay = now.getDate();
+
+let startValues = { year: currentYear, month: currentMonth, day: currentDay, ampm: '上午' };
+let endValues = { year: currentYear, month: currentMonth, day: currentDay, ampm: '下午' };
+let startYearWheel, startMonthWheel, startDayWheel, startAmPmWheel;
+let endYearWheel, endMonthWheel, endDayWheel, endAmPmWheel;
+
+function updateDayWheel(wheel, year, month, currentDay) {
+  const dayItems = getDayOptions(year, month);
+  wheel.setItems(dayItems, Math.min(currentDay - 1, dayItems.length - 1));
+}
+
+function initWheels() {
+  const yearOptions = getYearOptions();
+  const monthOptions = getMonthOptions();
+  const initialDays = getDayOptions(currentYear, currentMonth);
+
+  startYearWheel = new WheelPicker('startYearWheel', 'startYearList', yearOptions, 0, (val) => {
+    startValues.year = val; updateDayWheel(startDayWheel, val, startValues.month, startValues.day); updateSummary();
+  });
+  startMonthWheel = new WheelPicker('startMonthWheel', 'startMonthList', monthOptions, currentMonth - 1, (val, idx) => {
+    startValues.month = idx + 1; updateDayWheel(startDayWheel, startValues.year, startValues.month, startValues.day); updateSummary();
+  });
+  startDayWheel = new WheelPicker('startDayWheel', 'startDayList', initialDays, currentDay - 1, (val, idx) => {
+    startValues.day = idx + 1; updateSummary();
+  });
+  startAmPmWheel = new WheelPicker('startAmPmWheel', 'startAmPmList', amPmItems, 0, (val) => {
+    startValues.ampm = val; updateSummary();
+  });
+
+  endYearWheel = new WheelPicker('endYearWheel', 'endYearList', yearOptions, 0, (val) => {
+    endValues.year = val; updateDayWheel(endDayWheel, val, endValues.month, endValues.day); updateSummary();
+  });
+  endMonthWheel = new WheelPicker('endMonthWheel', 'endMonthList', monthOptions, currentMonth - 1, (val, idx) => {
+    endValues.month = idx + 1; updateDayWheel(endDayWheel, endValues.year, endValues.month, endValues.day); updateSummary();
+  });
+  endDayWheel = new WheelPicker('endDayWheel', 'endDayList', initialDays, currentDay - 1, (val, idx) => {
+    endValues.day = idx + 1; updateSummary();
+  });
+  endAmPmWheel = new WheelPicker('endAmPmWheel', 'endAmPmList', amPmItems, 1, (val) => {
+    endValues.ampm = val; updateSummary();
+  });
+  updateSummary();
+}
+
+function formatTimeDisplay(values) {
+  return values.year + '年 ' + values.month + '月' + values.day + '日 ' + values.ampm;
+}
+function updateSummary() {
+  document.getElementById('startSummary').textContent = formatTimeDisplay(startValues);
+  document.getElementById('endSummary').textContent = formatTimeDisplay(endValues);
+}
+
+// ========== 用户信息 ==========
+let userInfo = {};
+
+function loadUserInfo() {
+  const stored = localStorage.getItem('userInfo');
+  if (stored) {
+    userInfo = JSON.parse(stored);
+    studentInfo.name = userInfo.name || '';
+    studentInfo.phone = userInfo.phone || '';
+    document.getElementById('profileAcc').textContent = userInfo.username || userInfo.user_id || '-';
+    document.getElementById('profileName').textContent = userInfo.name || '-';
+    document.getElementById('profileClass').textContent = userInfo.class_id || '-';
+    const phone = userInfo.phone || '';
+    document.getElementById('profilePhone').textContent = phone.length === 11 ? phone.substring(0,3)+'****'+phone.substring(7) : (phone || '-');
+  }
+}
+
+// ========== 渲染 ==========
+function renderLeaveList() {
+  let html = '';
+  if (leaveList.length === 0) {
+    html = `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">📭</div><div>暂无请假记录</div></div></td></tr>`;
+  } else {
+    leaveList.forEach((v, i) => {
+      let statusClass = v.status === '待审批' ? 'status-pending' : v.status === '已通过' ? 'status-approved' : 'status-rejected';
+      let startDisplay = v.start_time ? v.start_time.substring(0, 16) : '';
+      let endDisplay = v.end_time ? v.end_time.substring(0, 16) : '';
+      html += `<tr>
+        <td>${i+1}</td>
+        <td style="font-size:0.85rem;">${startDisplay} ~ ${endDisplay}</td>
+        <td>${v.leave_type}</td>
+        <td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${v.reason||''}">${v.reason||'-'}</td>
+        <td><span class="status-badge ${statusClass}">${v.status}</span></td>
+        <td>${v.status==='待审批'?`<button class="btn-danger btn-sm" onclick="cancelLeave(${i})">撤销</button>`:'<span style="color:#aaa;">-</span>'}</td>
+      </tr>`;
+    });
+  }
+  document.getElementById('list').innerHTML = html;
+}
+
+// ========== 页面切换 ==========
+function change(n) {
+  cur = n;
+  document.querySelectorAll('.nav-menu .menu').forEach((v, i) => v.className = 'menu' + ((i+1)===n?' active':''));
+  document.getElementById('page1').style.display = n===1?'block':'none';
+  document.getElementById('page2').style.display = n===2?'block':'none';
+  document.getElementById('page3').style.display = n===3?'block':'none';
+  if (n===3) loadUserInfo();
+}
+
+// ========== 提交请假 ==========
+async function submitLeave() {
+  const type = document.getElementById('type').value;
+  const reason = document.getElementById('reason').value.trim();
+  if (!reason) { alert('请填写请假原因'); return; }
+
+  const sY = parseInt(startValues.year), sM = parseInt(startValues.month), sD = parseInt(startValues.day);
+  const eY = parseInt(endValues.year), eM = parseInt(endValues.month), eD = parseInt(endValues.day);
+  if (new Date(eY, eM-1, eD) < new Date(sY, sM-1, sD)) { alert('结束时间不能早于开始时间'); return; }
+
+  const startFormatted = `${sY}-${String(sM).padStart(2,'0')}-${String(sD).padStart(2,'0')} 08:00:00`;
+  const endFormatted = `${eY}-${String(eM).padStart(2,'0')}-${String(eD).padStart(2,'0')} 17:00:00`;
+
+  try {
+    const res = await fetch('http://localhost:5000/api/student/leave', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ start_time: startFormatted, end_time: endFormatted, leave_type: type, reason })
+    });
+    const data = await res.json();
+    if (data.code === 200) {
+      alert('请假申请提交成功！');
+      document.getElementById('reason').value = '';
+      loadLeaveListFromDB();
+    } else if (data.code === 401) {
+      alert('请先登录'); location.href = 'login.html';
+    } else {
+      alert(data.msg);
+    }
+  } catch (e) {
+    alert('提交失败，请检查网络连接');
+    console.error(e);
+  }
+}
+
+// ========== 从数据库加载 ==========
+async function loadLeaveListFromDB() {
+  try {
+    const res = await fetch('http://localhost:5000/api/student/leaves', {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include'
+    });
+    const data = await res.json();
+    if (data.code === 200) {
+      leaveList = data.data;
+      renderLeaveList();
+    } else if (data.code === 401) {
+      location.href = 'login.html';
+    }
+  } catch (e) {
+    console.error('加载列表失败:', e);
+  }
+}
+
+async function cancelLeave(i) {
+  const leaveId = leaveList[i].leave_id;
+  if (!confirm('确认撤销该请假申请吗？')) return;
+  try {
+    const res = await fetch(`http://localhost:5000/api/student/leave/${leaveId}/cancel`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include'
+    });
+    const data = await res.json();
+    if (data.code === 200) {
+      alert('撤销成功');
+      loadLeaveListFromDB();
+    } else {
+      alert(data.msg);
+    }
+  } catch (e) {
+    alert('操作失败');
+    console.error(e);
+  }
+}
+
+// ========== 修改资料弹窗 ==========
+let currentEditType = '';
+let studentInfo = { pwd: '123456', phone: '', name: '' };
+
+function openEditModal(type) {
+  currentEditType = type;
+  const titles = {name:'修改姓名',phone:'修改手机号',password:'修改密码'};
+  document.getElementById('modalTitle').textContent = titles[type];
+  let html = '';
+  if (type==='name') {
+    html = `<div class="form-group"><label>新姓名 <span style="color:#c45555;">*</span></label><input id="editNewName" value="${studentInfo.name||''}"><div class="hint-text">修改姓名无需验证密码</div></div>`;
+  } else if (type==='phone') {
+    html = `<div class="form-group"><label>当前手机号</label><input value="${studentInfo.phone||''}" disabled></div>
+      <div class="form-group"><label>新手机号 <span style="color:#c45555;">*</span></label><input id="editNewPhone" value="${studentInfo.phone||''}"><div class="hint-text">修改手机号需要验证原密码</div></div>
+      <div class="form-group"><label>原密码确认 <span style="color:#c45555;">*</span></label><input id="editOldPwd" type="password"><div class="error-text" id="pwdError">原密码错误</div></div>`;
+  } else {
+    html = `<div class="form-group"><label>原密码 <span style="color:#c45555;">*</span></label><input id="editOldPwd" type="password"><div class="error-text" id="pwdError">原密码错误</div></div>
+      <div class="form-group"><label>新密码 <span style="color:#c45555;">*</span></label><input id="editNewPwd" type="password"><div class="hint-text">密码长度至少4位</div></div>
+      <div class="form-group"><label>确认新密码 <span style="color:#c45555;">*</span></label><input id="editConfirmPwd" type="password"><div class="error-text" id="confirmError">两次密码不一致</div></div>`;
+  }
+  document.getElementById('modalContent').innerHTML = html;
+  document.getElementById('editModal').classList.add('active');
+}
+
+function closeEditModal() { document.getElementById('editModal').classList.remove('active'); currentEditType = ''; }
+
+async function submitEdit() {
+  const btn = document.querySelector('.modal-submit');
+  if (btn) { btn.disabled = true; btn.textContent = '提交中...'; }
+  try {
+  if (currentEditType==='name') {
+    const n = document.getElementById('editNewName')?.value?.trim();
+    if(!n){alert('请输入新姓名');return}
+    const res = await fetch('http://localhost:5000/api/user/profile', {
+      method: 'PUT', headers: {'Content-Type':'application/json'}, credentials: 'include',
+      body: JSON.stringify({name: n})
+    });
+    const data = await res.json();
+    if(data.code===200){ userInfo.name=n; studentInfo.name=n; localStorage.setItem('userInfo', JSON.stringify(userInfo)); loadUserInfo(); alert('修改成功'); closeEditModal(); }
+    else alert(data.msg);
+  } else if (currentEditType==='phone') {
+    const p = document.getElementById('editNewPhone')?.value?.trim();
+    const o = document.getElementById('editOldPwd')?.value;
+    if(!p){alert('请输入新手机号');return}
+    if(!/^1\d{10}$/.test(p)){alert('请输入正确的手机号格式');return}
+    if(!o){alert('请输入原密码');return}
+    const res = await fetch('http://localhost:5000/api/user/profile', {
+      method: 'PUT', headers: {'Content-Type':'application/json'}, credentials: 'include',
+      body: JSON.stringify({phone: p, old_password: o})
+    });
+    const data = await res.json();
+    if(data.code===200){ userInfo.phone=p; studentInfo.phone=p; localStorage.setItem('userInfo', JSON.stringify(userInfo)); loadUserInfo(); alert('修改成功'); closeEditModal(); }
+    else { document.getElementById('pwdError').style.display='block'; }
+  } else {
+    const o = document.getElementById('editOldPwd')?.value;
+    const n = document.getElementById('editNewPwd')?.value;
+    const c = document.getElementById('editConfirmPwd')?.value;
+    if(!o||!n||!c){alert('请填写所有字段');return}
+    if(n.length<4){alert('新密码长度至少4位');return}
+    if(n!==c){document.getElementById('confirmError').style.display='block';return}
+    const res = await fetch('http://localhost:5000/api/user/profile', {
+      method: 'PUT', headers: {'Content-Type':'application/json'}, credentials: 'include',
+      body: JSON.stringify({new_password: n, old_password: o})
+    });
+    const data = await res.json();
+    if(data.code===200){ studentInfo.pwd=n; alert('密码修改成功！请重新登录'); closeEditModal(); }
+    else { document.getElementById('pwdError').style.display='block'; }
+  }
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '确认修改'; }
+  }
+}
+
+// ========== 退出 ==========
+function showLogoutDialog() { document.getElementById('logoutOverlay').classList.add('active'); }
+function hideLogoutDialog() { document.getElementById('logoutOverlay').classList.remove('active'); }
+async function confirmLogout() {
+  await fetch('http://localhost:5000/api/logout', { method: 'POST', credentials: 'include' });
+  localStorage.clear();
+  location.href = 'login.html';
+}
+
+document.addEventListener('click', (e) => {
+  if(e.target === document.getElementById('editModal')) closeEditModal();
+  if(e.target === document.getElementById('logoutOverlay')) hideLogoutDialog();
+});
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape') {
+    if(document.getElementById('logoutOverlay').classList.contains('active')) hideLogoutDialog();
+    else if(document.getElementById('editModal').classList.contains('active')) closeEditModal();
+  }
+});
+
+// ========== 初始化 ==========
+loadUserInfo();
+loadLeaveListFromDB();
+initWheels();
+</script>
+</body>
+</html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>校园请假系统 - 功能结构图</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", sans-serif;
+}
+
+body {
+  background: #e8eef5;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: center;
+  color: #3d5268;
+  margin-bottom: 10px;
+  font-size: 2rem;
+  letter-spacing: 3px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #6b7d8f;
+  margin-bottom: 30px;
+  font-size: 0.95rem;
+}
+
+.func-diagram {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 40px 20px;
+  box-shadow: 0 8px 30px rgba(60, 80, 110, 0.12);
+  border: 1px solid #e3e9f2;
+  overflow-x: auto;
+}
+
+.tree {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 1000px;
+}
+
+.root-node {
+  background: linear-gradient(135deg, #3d5268, #2c3e50);
+  color: #ffffff;
+  padding: 18px 40px;
+  border-radius: 16px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  box-shadow: 0 8px 20px rgba(40, 60, 90, 0.3);
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.level1-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.level1-branch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 220px;
+}
+
+.level1-node {
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #ffffff;
+  box-shadow: 0 6px 16px rgba(60, 80, 110, 0.2);
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.level1-node.login-l1 { background: linear-gradient(135deg, #8fa4bc, #7b93ae); }
+.level1-node.student-l1 { background: linear-gradient(135deg, #5b8cbf, #4a7aad); }
+.level1-node.teacher-l1 { background: linear-gradient(135deg, #5b9e7d, #4a8a6a); }
+.level1-node.admin-l1 { background: linear-gradient(135deg, #7b6b9e, #6a5a8d); }
+
+.level2-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.level2-node {
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-align: center;
+  border: 2px solid;
+  background: #ffffff;
+}
+
+.level2-node.login-l2 { border-color: #8fa4bc; color: #7b93ae; background: #f5f8fb; }
+.level2-node.student-l2 { border-color: #5b8cbf; color: #4a7aad; background: #f5f9fd; }
+.level2-node.teacher-l2 { border-color: #5b9e7d; color: #4a8a6a; background: #f5faf7; }
+.level2-node.admin-l2 { border-color: #7b6b9e; color: #6a5a8d; background: #f8f5fd; }
+
+.level3-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px 0 8px 16px;
+}
+
+.level3-node {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  border: 1.5px solid;
+  background: #ffffff;
+}
+
+.level3-node.login-l3 { border-color: #d0dce8; color: #7b93ae; }
+.level3-node.student-l3 { border-color: #c0d8f0; color: #5b8cbf; }
+.level3-node.teacher-l3 { border-color: #b8dcc8; color: #5b9e7d; }
+.level3-node.admin-l3 { border-color: #c8bddc; color: #7b6b9e; }
+
+.summary-table {
+  margin-top: 30px;
+  overflow-x: auto;
+}
+
+.summary-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.summary-table th {
+  background: #f0f4fa;
+  padding: 12px;
+  border: 1px solid #e3e9f2;
+  color: #3d5268;
+  font-weight: 600;
+}
+
+.summary-table td {
+  padding: 10px 12px;
+  border: 1px solid #e3e9f2;
+  color: #4a5568;
+}
+
+.legend {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  padding: 16px;
+  background: #f8fafd;
+  border-radius: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: #6b7d8f;
+}
+
+.legend-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .level1-container { gap: 12px; }
+  .level1-branch { min-width: 150px; }
+  .level1-node { font-size: 0.9rem; padding: 10px 16px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>📊 校园请假管理系统</h1>
+  <p class="subtitle">功能结构图</p>
+
+  <div class="func-diagram">
+    <div class="tree">
+      
+      <!-- 根节点 -->
+      <div class="root-node">🏫 校园请假管理系统</div>
+
+      <!-- 四大模块 -->
+      <div class="level1-container">
+        
+        <!-- 登录注册模块 -->
+        <div class="level1-branch">
+          <div class="level1-node login-l1">🔐 登录注册模块</div>
+          <div class="level2-container">
+            <div class="level2-node login-l2">账号登录</div>
+            <div class="level3-container">
+              <span class="level3-node login-l3">账号密码验证</span>
+              <span class="level3-node login-l3">角色识别跳转</span>
+              <span class="level3-node login-l3">记住密码</span>
+            </div>
+            <div class="level2-node login-l2">注册新账号</div>
+            <div class="level3-container">
+              <span class="level3-node login-l3">填写账号信息</span>
+              <span class="level3-node login-l3">选择角色</span>
+              <span class="level3-node login-l3">密码设置</span>
+            </div>
+            <div class="level2-node login-l2">密码管理</div>
+            <div class="level3-container">
+              <span class="level3-node login-l3">显示/隐藏密码</span>
+              <span class="level3-node login-l3">修改密码</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 学生端模块 -->
+        <div class="level1-branch">
+          <div class="level1-node student-l1">👨‍🎓 学生端功能</div>
+          <div class="level2-container">
+            <div class="level2-node student-l2">请假申请</div>
+            <div class="level3-container">
+              <span class="level3-node student-l3">滚轮时间选择</span>
+              <span class="level3-node student-l3">年/月/日/上下午</span>
+              <span class="level3-node student-l3">请假类型</span>
+              <span class="level3-node student-l3">原因填写</span>
+            </div>
+            <div class="level2-node student-l2">请假记录</div>
+            <div class="level3-container">
+              <span class="level3-node student-l3">记录列表</span>
+              <span class="level3-node student-l3">状态跟踪</span>
+              <span class="level3-node student-l3">撤销申请</span>
+            </div>
+            <div class="level2-node student-l2">个人中心</div>
+            <div class="level3-container">
+              <span class="level3-node student-l3">查看资料</span>
+              <span class="level3-node student-l3">修改姓名</span>
+              <span class="level3-node student-l3">修改手机号</span>
+              <span class="level3-node student-l3">修改密码</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 教师端模块 -->
+        <div class="level1-branch">
+          <div class="level1-node teacher-l1">👨‍🏫 教师端功能</div>
+          <div class="level2-container">
+            <div class="level2-node teacher-l2">审批管理</div>
+            <div class="level3-container">
+              <span class="level3-node teacher-l3">待审批列表</span>
+              <span class="level3-node teacher-l3">通过审批</span>
+              <span class="level3-node teacher-l3">驳回申请</span>
+            </div>
+            <div class="level2-node teacher-l2">记录查看</div>
+            <div class="level3-container">
+              <span class="level3-node teacher-l3">已处理记录</span>
+              <span class="level3-node teacher-l3">结果标签</span>
+            </div>
+            <div class="level2-node teacher-l2">学生管理</div>
+            <div class="level3-container">
+              <span class="level3-node teacher-l3">班级学生名单</span>
+            </div>
+            <div class="level2-node teacher-l2">个人中心</div>
+            <div class="level3-container">
+              <span class="level3-node teacher-l3">修改资料</span>
+              <span class="level3-node teacher-l3">修改密码</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 管理员模块 -->
+        <div class="level1-branch">
+          <div class="level1-node admin-l1">🔧 管理员端功能</div>
+          <div class="level2-container">
+            <div class="level2-node admin-l2">学生管理</div>
+            <div class="level3-container">
+              <span class="level3-node admin-l3">新增</span>
+              <span class="level3-node admin-l3">编辑</span>
+              <span class="level3-node admin-l3">删除</span>
+            </div>
+            <div class="level2-node admin-l2">教师管理</div>
+            <div class="level3-container">
+              <span class="level3-node admin-l3">新增</span>
+              <span class="level3-node admin-l3">编辑</span>
+              <span class="level3-node admin-l3">删除</span>
+            </div>
+            <div class="level2-node admin-l2">班级管理</div>
+            <div class="level3-container">
+              <span class="level3-node admin-l3">新增</span>
+              <span class="level3-node admin-l3">编辑</span>
+              <span class="level3-node admin-l3">删除</span>
+            </div>
+            <div class="level2-node admin-l2">学院管理</div>
+            <div class="level3-container">
+              <span class="level3-node admin-l3">新增</span>
+              <span class="level3-node admin-l3">编辑</span>
+              <span class="level3-node admin-l3">删除</span>
+            </div>
+            <div class="level2-node admin-l2">统计日志</div>
+            <div class="level3-container">
+              <span class="level3-node admin-l3">请假统计</span>
+              <span class="level3-node admin-l3">系统日志</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 功能汇总表 -->
+    <div class="summary-table">
+      <h3 style="color:#3d5268;margin-bottom:12px;">📋 功能模块汇总</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>模块</th><th>一级功能</th><th>二级功能</th><th>角色</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td rowspan="3">🔐 登录注册</td><td>账号登录</td><td>验证、角色跳转、记住密码</td><td>全部</td></tr>
+          <tr><td>注册新账号</td><td>填写信息、选择角色</td><td>新用户</td></tr>
+          <tr><td>密码管理</td><td>显示/隐藏、修改密码</td><td>全部</td></tr>
+          <tr><td rowspan="3">👨‍🎓 学生端</td><td>请假申请</td><td>时间选择、类型、原因</td><td>学生</td></tr>
+          <tr><td>请假记录</td><td>列表、状态、撤销</td><td>学生</td></tr>
+          <tr><td>个人中心</td><td>查看/修改资料</td><td>学生</td></tr>
+          <tr><td rowspan="4">👨‍🏫 教师端</td><td>审批管理</td><td>待审批列表、通过/驳回</td><td>教师</td></tr>
+          <tr><td>记录查看</td><td>已处理记录</td><td>教师</td></tr>
+          <tr><td>学生管理</td><td>班级学生名单</td><td>教师</td></tr>
+          <tr><td>个人中心</td><td>修改资料</td><td>教师</td></tr>
+          <tr><td rowspan="5">🔧 管理员</td><td>学生管理</td><td>增删改查</td><td>管理员</td></tr>
+          <tr><td>教师管理</td><td>增删改查</td><td>管理员</td></tr>
+          <tr><td>班级管理</td><td>增删改查</td><td>管理员</td></tr>
+          <tr><td>学院管理</td><td>增删改查</td><td>管理员</td></tr>
+          <tr><td>统计日志</td><td>数据统计、操作日志</td><td>管理员</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#8fa4bc;"></div> 登录注册</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#5b8cbf;"></div> 学生端</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#5b9e7d;"></div> 教师端</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#7b6b9e;"></div> 管理员端</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

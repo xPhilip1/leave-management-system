@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>校园请假系统 - ER图</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", sans-serif;
+}
+
+body {
+  background: #e8eef5;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: center;
+  color: #3d5268;
+  margin-bottom: 10px;
+  font-size: 2rem;
+  letter-spacing: 3px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #6b7d8f;
+  margin-bottom: 30px;
+  font-size: 0.95rem;
+}
+
+.er-diagram {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 40px 30px;
+  box-shadow: 0 8px 30px rgba(60, 80, 110, 0.12);
+  border: 1px solid #e3e9f2;
+  overflow-x: auto;
+}
+
+.er-canvas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px 30px;
+  min-width: 900px;
+  padding: 20px 0;
+}
+
+.entity {
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(60, 80, 110, 0.1);
+  border: 2px solid #dce3ef;
+  width: 260px;
+  transition: all 0.3s ease;
+}
+
+.entity:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(60, 80, 110, 0.18);
+}
+
+.entity-header {
+  background: linear-gradient(135deg, #5b7f9e, #4a627a);
+  color: #ffffff;
+  padding: 14px 16px;
+  border-radius: 12px 12px 0 0;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+}
+
+.entity.student .entity-header { background: linear-gradient(135deg, #5b8cbf, #4a7aad); }
+.entity.teacher .entity-header { background: linear-gradient(135deg, #5b9e7d, #4a8a6a); }
+.entity.admin .entity-header { background: linear-gradient(135deg, #7b6b9e, #6a5a8d); }
+.entity.leave .entity-header { background: linear-gradient(135deg, #c97a7a, #b55a5a); }
+.entity.class-room .entity-header { background: linear-gradient(135deg, #d4956b, #c0805a); }
+.entity.college .entity-header { background: linear-gradient(135deg, #8fa4bc, #7b93ae); }
+
+.entity-body {
+  padding: 8px 0;
+}
+
+.attribute {
+  padding: 9px 16px;
+  border-bottom: 1px solid #f0f4fa;
+  font-size: 0.85rem;
+  color: #4a5568;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.attribute:last-child {
+  border-bottom: none;
+}
+
+.attr-key {
+  color: #c4883d;
+  font-weight: 700;
+  font-size: 0.75rem;
+  min-width: 16px;
+  text-align: center;
+}
+
+.attr-name {
+  flex: 1;
+}
+
+.attr-type {
+  color: #8fa4bc;
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
+.attr-underline {
+  text-decoration: underline;
+  text-decoration-color: #c4883d;
+  text-underline-offset: 3px;
+}
+
+.relations {
+  margin-top: 30px;
+  padding: 20px;
+  background: #f8fafd;
+  border-radius: 14px;
+  border: 1px solid #e3e9f2;
+}
+
+.relations h3 {
+  color: #3d5268;
+  margin-bottom: 16px;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.relation-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+}
+
+.relation-item {
+  background: #ffffff;
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: 1px solid #e3e9f2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: #4a5568;
+}
+
+.relation-arrow {
+  color: #5b7f9e;
+  font-weight: 700;
+}
+
+.relation-type {
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.relation-type.one { background: #e8f0f8; color: #4a7aad; }
+.relation-type.many { background: #fef0e8; color: #c4883d; }
+
+.legend {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: #6b7d8f;
+}
+
+.legend-key { color: #c4883d; font-weight: 700; }
+
+@media (max-width: 768px) {
+  .er-canvas { gap: 20px; }
+  .entity { width: 220px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>📊 校园请假管理系统</h1>
+  <p class="subtitle">实体关系图（ER Diagram）</p>
+
+  <div class="er-diagram">
+    <div class="er-canvas">
+      
+      <!-- 学生实体 -->
+      <div class="entity student">
+        <div class="entity-header">👨‍🎓 学生 (Student)</div>
+        <div class="entity-body">
+          <div class="attribute">
+            <span class="attr-key">🔑</span>
+            <span class="attr-name attr-underline">学号 (stu_id)</span>
+            <span class="attr-type">VARCHAR(20)</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-name">姓名 (name)</span>
+            <span class="attr-type">VARCHAR(50)</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-name">密码 (password)</span>
+            <span class="attr-type">VARCHAR(100)</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-name">手机号 (phone)</span>
+            <span class="attr-type">VARCHAR(20)</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-key">🔗</span>
+            <span class="attr-name">班级编号 (class_id)</span>
+            <span class="attr-type">VARCHAR(20) FK</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 教师实体 -->
+      <div class="entity teacher">
+        <div class="entity-header">👨‍🏫 教师 (Teacher)</div>
+        <div class="entity-body">
+          <div class="attribute">
+            <span class="attr-key">🔑</span>
+            <span class="attr-name attr-underline">工号 (tea_id)</span>
+            <span class="attr-type">VARCHAR(20)</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-name">姓名 (name)</span>
+            <span class="attr-type">VARCHAR(50)</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-name">密码 (password)</span>
+            <span class="attr-type">VARCHAR(100)</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-name">电话 (phone)</span>
+            <span class="attr-type">VARCHAR(20)</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-key">🔗</span>
+            <span class="attr-name">班级编号 (class_id)</span>
+            <span class="attr-type">VARCHAR(20) FK</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 管理员实体 -->
+      <div class="entity admin">
+        <div class="entity-header">🔧 管理员 (Admin)</div>
+        <div class="entity-body">
+          <div class="attribute">
+            <span class="attr-key">🔑</span>
+            <span class="attr-name attr-underline">管理员ID</span>
+            <span class="attr-type">VARCHAR(20)</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-name">账号 (account)</span>
+            <span class="attr-type">VARCHAR(50)</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-name">密码 (password)</span>
+            <span class="attr-type">VARCHAR(100)</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-name">姓名 (name)</span>
+            <span class="attr-type">VARCHAR(50)</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-name">角色 (role)</span>
+            <span class="attr-type">VARCHAR(20)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 请假记录实体 -->
+      <div class="entity leave">
+        <div class="entity-header">📝 请假记录 (Leave)</div>
+        <div class="entity-body">
+          <div class="attribute">
+            <span class="attr-key">🔑</span>
+            <span class="attr-name attr-underline">请假ID</span>
+            <span class="attr-type">INT</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-key">🔗</span>
+            <span class="attr-name">学号 (stu_id)</span>
+            <span class="attr-type">VARCHAR(20) FK</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-name">开始时间</span>
+            <span class="attr-type">DATETIME</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-name">结束时间</span>
+            <span class="attr-type">DATETIME</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-name">请假类型</span>
+            <span class="attr-type">VARCHAR(20)</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-name">原因 (reason)</span>
+            <span class="attr-type">TEXT</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-name">状态 (status)</span>
+            <span class="attr-type">VARCHAR(20)</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-key">🔗</span>
+            <span class="attr-name">审批教师</span>
+            <span class="attr-type">VARCHAR(20) FK</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 班级实体 -->
+      <div class="entity class-room">
+        <div class="entity-header">🏫 班级 (Class)</div>
+        <div class="entity-body">
+          <div class="attribute">
+            <span class="attr-key">🔑</span>
+            <span class="attr-name attr-underline">班级编号</span>
+            <span class="attr-type">VARCHAR(20)</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-name">班级名称</span>
+            <span class="attr-type">VARCHAR(100)</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-key">🔗</span>
+            <span class="attr-name">学院编号</span>
+            <span class="attr-type">VARCHAR(20) FK</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-name">专业 (major)</span>
+            <span class="attr-type">VARCHAR(100)</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-name">年级 (grade)</span>
+            <span class="attr-type">VARCHAR(10)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 学院实体 -->
+      <div class="entity college">
+        <div class="entity-header">🏛️ 学院 (College)</div>
+        <div class="entity-body">
+          <div class="attribute">
+            <span class="attr-key">🔑</span>
+            <span class="attr-name attr-underline">学院编号</span>
+            <span class="attr-type">VARCHAR(20)</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-name">学院名称</span>
+            <span class="attr-type">VARCHAR(100)</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-name">院长 (dean)</span>
+            <span class="attr-type">VARCHAR(50)</span>
+          </div>
+          <div class="attribute">
+            <span class="attr-name">联系电话</span>
+            <span class="attr-type">VARCHAR(20)</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="relations">
+      <h3>🔗 实体关系说明</h3>
+      <div class="relation-list">
+        <div class="relation-item">
+          <span>学生</span><span class="relation-arrow">→</span><span>请假记录</span>
+          <span class="relation-type many">1 : N</span>
+          <span style="font-size:0.75rem;color:#8fa4bc;">（提交）</span>
+        </div>
+        <div class="relation-item">
+          <span>教师</span><span class="relation-arrow">→</span><span>请假记录</span>
+          <span class="relation-type many">1 : N</span>
+          <span style="font-size:0.75rem;color:#8fa4bc;">（审批）</span>
+        </div>
+        <div class="relation-item">
+          <span>学院</span><span class="relation-arrow">→</span><span>班级</span>
+          <span class="relation-type many">1 : N</span>
+          <span style="font-size:0.75rem;color:#8fa4bc;">（包含）</span>
+        </div>
+        <div class="relation-item">
+          <span>班级</span><span class="relation-arrow">→</span><span>学生</span>
+          <span class="relation-type many">1 : N</span>
+          <span style="font-size:0.75rem;color:#8fa4bc;">（归属）</span>
+        </div>
+        <div class="relation-item">
+          <span>班级</span><span class="relation-arrow">→</span><span>教师</span>
+          <span class="relation-type one">1 : 1</span>
+          <span style="font-size:0.75rem;color:#8fa4bc;">（管理）</span>
+        </div>
+        <div class="relation-item">
+          <span>管理员</span><span class="relation-arrow">⇢</span><span>全系统</span>
+          <span class="relation-type many">1 : N</span>
+          <span style="font-size:0.75rem;color:#8fa4bc;">（管理）</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><span class="legend-key">🔑</span> 主键</div>
+      <div class="legend-item"><span style="text-decoration:underline;text-decoration-color:#c4883d;">下划线</span> 主键属性</div>
+      <div class="legend-item"><span class="legend-key">🔗</span> 外键</div>
+      <div class="legend-item"><span style="color:#5b7f9e;">1:N</span> 一对多</div>
+      <div class="legend-item"><span style="color:#5b7f9e;">1:1</span> 一对一</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
